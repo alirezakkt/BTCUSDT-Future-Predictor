@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# fetch BTC Live Price
+# fetch BTC Price
 def fetch_binance_data(symbol="BTCUSDT", interval="1h", limit=20):
     url = f"https://api.binance.com/api/v3/klines?symbol={symbol}&interval={interval}&limit={limit}"
     try:
@@ -29,7 +29,7 @@ def fetch_binance_data(symbol="BTCUSDT", interval="1h", limit=20):
         logging.error(f"Error fetching API: {e}")
         raise
 
-# Class for Polynomial Regression Model with Incremental Updates
+#Polynomial Regression Model with Incremental Updates
 class PolynomialRegressionModel:
     def __init__(self, degree=2):
         self.degree = degree
@@ -56,17 +56,14 @@ class PolynomialRegressionModel:
         self.model.partial_fit(poly_features, new_target)
         logging.info("Model updated with new data.")
 
-# plot actual vs predicted 
+# plot
 def plot_predictions_with_future(actual, predicted, timestamps, future_predictions, future_timestamps, title="Market Price Predictions"):
     plt.figure(figsize=(14, 7))
 
-    # Plot actual prices
     plt.plot(timestamps, actual, label="Actual Prices", marker='o', linestyle='-', color='blue', linewidth=1.5)
-
-    # Plot predicted prices_parallel
     plt.plot(timestamps, predicted, label="Predicted Prices", marker='x', linestyle='--', color='orange', linewidth=1.5)
 
-    # Plot future prediction
+    # Plot future
     for i, (future_time, future_price) in enumerate(zip(future_timestamps, future_predictions)):
         plt.scatter(future_time, future_price, color='green', s=100, edgecolors='black', label="Future Prediction" if i == 0 else "")
         plt.text(future_time, future_price + 0.01 * future_price, f"{future_price:.2f}", fontsize=9, ha='center', color='green')
@@ -97,7 +94,7 @@ def main():
         future_prediction = pr_model.predict(X_future)[0]
         logging.info(f"Predicted Future Price: {future_prediction:.2f}")
 
-        # Simulate future timestamp
+        # Simulate timestamp
         future_timestamp = timestamps[-1] + timedelta(hours=1)
 
         plot_predictions_with_future(
